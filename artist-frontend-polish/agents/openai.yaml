@@ -1,0 +1,4 @@
+interface:
+  display_name: "Artist Frontend Polish"
+  short_description: "用艺术家审美打磨前端界面、视觉层次、动效和可复用美化样例。"
+  default_prompt: "请使用 artist-frontend-polish 帮我美化这个前端界面，提升视觉审美、布局层次、色彩、细节和动效。"

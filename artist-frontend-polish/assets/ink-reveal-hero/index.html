@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ink Reveal Hero</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="ink-hero" id="inkHero">
+      <div class="ink-hero__image" aria-hidden="true"></div>
+      <canvas class="ink-hero__mask" id="inkMask"></canvas>
+      <section class="ink-hero__content">
+        <p class="ink-hero__eyebrow">Canvas Ink Reveal</p>
+        <h1>让鼠标像墨一样，揭开首屏画面</h1>
+        <p class="ink-hero__body">
+          底层是一张图，上层是一块 canvas 遮罩。鼠标经过时擦开遮罩，露出画面。
+        </p>
+      </section>
+    </main>
+    <script type="module" src="./ink-reveal.js"></script>
+  </body>
+</html>
