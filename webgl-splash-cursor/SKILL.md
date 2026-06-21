@@ -40,9 +40,9 @@ export default function App() {
 - `RAINBOW_MODE={true}`：使用随机多彩墨色，更接近参考网站的彩色水墨散开。
 - `SPLAT_RADIUS={0.5}`：组件内部会除以 `100`，所以这里的 `0.5` 对应实际半径 `0.005`。不要误传 `0.005`，否则效果会小到几乎看不见。
 - `SPLAT_FORCE={6000}`：提高鼠标移动时的喷溅力度。
-- `DENSITY_DISSIPATION={0.98}` 与 `VELOCITY_DISSIPATION={0.99}`：让墨色保留更久，流体速度更慢消散。
+- `DENSITY_DISSIPATION={1.8}` 与 `VELOCITY_DISSIPATION={1.35}`：让墨色比参考站原始参数更快变淡，避免停留太久。
 - `PRESSURE={0.8}`、`PRESSURE_ITERATIONS={25}`、`CURL={30}`：控制流体压强、迭代和卷曲感。
-- `COLOR_UPDATE_SPEED={25}`：降低换色频率，颜色变化更克制。
+- `COLOR_UPDATE_SPEED={12}`：约每 12 次鼠标移动换一次颜色，变化更快但仍保持克制。
 - `REFERENCE_MODE={true}`：默认开启。使用参考站风格的低亮度随机 RGB、按鼠标移动次数换色、画布半尺寸流体分辨率和非 DPR 鼠标采样。
 - `USE_PIXEL_RATIO={false}`：默认关闭。参考站直接使用 CSS 像素，开启 DPR 会让水墨更细、更锐，观感会偏离原站。
 - `TEXTURE_DOWNSAMPLE={1}`：默认把流体贴图降到画布尺寸的一半，保留参考站那种柔一点、慢一点的扩散边缘。
