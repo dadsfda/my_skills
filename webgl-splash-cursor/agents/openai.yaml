@@ -1,0 +1,4 @@
+interface:
+  display_name: "WebGL Splash Cursor"
+  short_description: "为 React 页面接入多彩 WebGL 水墨鼠标滑动特效。"
+  default_prompt: "请使用 webgl-splash-cursor skill，把多彩水墨鼠标滑动特效接入我的 React 页面。"
