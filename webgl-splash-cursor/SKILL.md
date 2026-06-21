@@ -18,7 +18,7 @@ description: Use when adding a React WebGL fluid cursor, colorful ink splash poi
 ## 集成步骤
 
 1. 将 `assets/SplashCursor.jsx` 复制到项目组件目录，例如 `src/components/SplashCursor.jsx`。
-2. 在页面根组件中引入并渲染：
+2. 在页面根组件中引入并渲染。默认已经开启参考站手感，不需要额外传一大串参数：
 
 ```jsx
 import SplashCursor from './components/SplashCursor';
@@ -26,17 +26,7 @@ import SplashCursor from './components/SplashCursor';
 export default function App() {
   return (
     <>
-      <SplashCursor
-        RAINBOW_MODE
-        SPLAT_RADIUS={0.5}
-        SPLAT_FORCE={6000}
-        DENSITY_DISSIPATION={0.98}
-        VELOCITY_DISSIPATION={0.99}
-        PRESSURE={0.8}
-        PRESSURE_ITERATIONS={25}
-        CURL={30}
-        COLOR_UPDATE_SPEED={25}
-      />
+      <SplashCursor />
       <main>{/* 页面内容 */}</main>
     </>
   );
@@ -53,6 +43,16 @@ export default function App() {
 - `DENSITY_DISSIPATION={0.98}` 与 `VELOCITY_DISSIPATION={0.99}`：让墨色保留更久，流体速度更慢消散。
 - `PRESSURE={0.8}`、`PRESSURE_ITERATIONS={25}`、`CURL={30}`：控制流体压强、迭代和卷曲感。
 - `COLOR_UPDATE_SPEED={25}`：降低换色频率，颜色变化更克制。
+- `REFERENCE_MODE={true}`：默认开启。使用参考站风格的低亮度随机 RGB、按鼠标移动次数换色、画布半尺寸流体分辨率和非 DPR 鼠标采样。
+- `USE_PIXEL_RATIO={false}`：默认关闭。参考站直接使用 CSS 像素，开启 DPR 会让水墨更细、更锐，观感会偏离原站。
+- `TEXTURE_DOWNSAMPLE={1}`：默认把流体贴图降到画布尺寸的一半，保留参考站那种柔一点、慢一点的扩散边缘。
+- `ENABLE_INITIAL_SPLATS={false}`：默认不做进入页面时的随机水墨爆点，避免一加载就出现额外残留。
+
+如果想切回更接近 React Bits 原版的高亮透明效果，可以传：
+
+```jsx
+<SplashCursor REFERENCE_MODE={false} USE_PIXEL_RATIO />
+```
 
 ## 实现注意
 
@@ -61,6 +61,7 @@ export default function App() {
 - 如果 canvas 遮住页面，检查组件外层的 `zIndex`；如果点击失效，检查是否保留了 `pointerEvents: 'none'`。
 - 如果效果像“残留脏块”，优先调高消散速度或降低 `SPLAT_RADIUS`，不要重写 shader。
 - 如果用户明确要求复刻当前项目中的手感，保留 `pointer.deltaX` 和 `pointer.deltaY` 的 `* 10.0` 放大系数。
+- 如果用户说“跟原页面还是有区别”，先检查 `REFERENCE_MODE` 是否开启，再检查是否被页面背景、canvas 层级、透明混合和 DPR 采样改变了观感。
 
 ## 验证清单
 

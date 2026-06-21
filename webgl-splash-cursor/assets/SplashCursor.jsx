@@ -9,6 +9,7 @@ function SplashCursor({
       SIM_RESOLUTION = 128,
       DYE_RESOLUTION = 1440,
       CAPTURE_RESOLUTION = 512,
+      TEXTURE_DOWNSAMPLE = 1,
       DENSITY_DISSIPATION = 0.98,
       VELOCITY_DISSIPATION = 0.99,
       PRESSURE = 0.8,
@@ -21,7 +22,10 @@ function SplashCursor({
       BACK_COLOR = { r: 0.5, g: 0, b: 0 },
       TRANSPARENT = true,
       RAINBOW_MODE = true,
-      COLOR = '#ff0000'
+      COLOR = '#ff0000',
+      REFERENCE_MODE = true,
+      USE_PIXEL_RATIO = false,
+      ENABLE_INITIAL_SPLATS = false
     }) {
       const canvasRef = useRef(null);
       const animationFrameId = useRef(null);
@@ -51,6 +55,7 @@ function SplashCursor({
           SIM_RESOLUTION,
           DYE_RESOLUTION,
           CAPTURE_RESOLUTION,
+          TEXTURE_DOWNSAMPLE,
           DENSITY_DISSIPATION,
           VELOCITY_DISSIPATION,
           PRESSURE,
@@ -64,7 +69,10 @@ function SplashCursor({
           BACK_COLOR,
           TRANSPARENT,
           RAINBOW_MODE,
-          COLOR
+          COLOR,
+          REFERENCE_MODE,
+          USE_PIXEL_RATIO,
+          ENABLE_INITIAL_SPLATS
         };
 
         let pointers = [new pointerPrototype()];
@@ -560,8 +568,8 @@ function SplashCursor({
         const displayMaterial = new Material(baseVertexShader, displayShaderSource);
 
         function initFramebuffers() {
-          let simRes = getResolution(config.SIM_RESOLUTION);
-          let dyeRes = getResolution(config.DYE_RESOLUTION);
+          let simRes = config.REFERENCE_MODE ? getCanvasDownsampleResolution() : getResolution(config.SIM_RESOLUTION);
+          let dyeRes = config.REFERENCE_MODE ? getCanvasDownsampleResolution() : getResolution(config.DYE_RESOLUTION);
           const texType = ext.halfFloatTexType;
           const rgba = ext.formatRGBA;
           const rg = ext.formatRG;
@@ -682,6 +690,8 @@ function SplashCursor({
         initFramebuffers();
         let lastUpdateTime = Date.now();
         let colorUpdateTimer = 0.0;
+        let referenceMoveCount = 0;
+        let referenceColor = generateColor();
 
         function updateFrame() {
           if (!isActive) return;
@@ -714,6 +724,7 @@ function SplashCursor({
         }
 
         function updateColors(dt) {
+          if (config.REFERENCE_MODE) return;
           colorUpdateTimer += dt * config.COLOR_UPDATE_SPEED;
           if (colorUpdateTimer >= 1) {
             colorUpdateTimer = wrap(colorUpdateTimer, 0, 1);
@@ -902,6 +913,13 @@ function SplashCursor({
           if (!config.RAINBOW_MODE) {
             return hexToRGB(config.COLOR);
           }
+          if (config.REFERENCE_MODE) {
+            return {
+              r: (Math.random() + 0.2) * 0.3,
+              g: (Math.random() + 0.2) * 0.3,
+              b: (Math.random() + 0.2) * 0.3
+            };
+          }
           let c = HSVtoRGB(Math.random(), 1.0, 1.0);
           c.r *= 0.15;
           c.g *= 0.15;
@@ -968,7 +986,16 @@ function SplashCursor({
           else return { width: min, height: max };
         }
 
+        function getCanvasDownsampleResolution() {
+          const downsample = Math.max(0, config.TEXTURE_DOWNSAMPLE);
+          return {
+            width: Math.max(1, gl.drawingBufferWidth >> downsample),
+            height: Math.max(1, gl.drawingBufferHeight >> downsample)
+          };
+        }
+
         function scaleByPixelRatio(input) {
+          if (!config.USE_PIXEL_RATIO) return Math.floor(input);
           const pixelRatio = window.devicePixelRatio || 1;
           return Math.floor(input * pixelRatio);
         }
@@ -997,6 +1024,16 @@ function SplashCursor({
           let pointer = pointers[0];
           let posX = scaleByPixelRatio(e.clientX);
           let posY = scaleByPixelRatio(e.clientY);
+          if (config.REFERENCE_MODE) {
+            referenceMoveCount += 1;
+            if (referenceMoveCount > config.COLOR_UPDATE_SPEED) {
+              referenceColor = generateColor();
+              referenceMoveCount = 0;
+            }
+            pointer.down = true;
+            updatePointerMoveData(pointer, posX, posY, referenceColor);
+            return;
+          }
           if (!firstMouseMoveHandled) {
             let color = generateColor();
             updatePointerMoveData(pointer, posX, posY, color);
