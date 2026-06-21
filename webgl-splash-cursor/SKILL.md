@@ -38,7 +38,7 @@ export default function App() {
 ## 参数建议
 
 - `RAINBOW_MODE={true}`：使用随机多彩墨色，更接近参考网站的彩色水墨散开。
-- `SPLAT_RADIUS={0.5}`：组件内部会除以 `100`，所以这里的 `0.5` 对应实际半径 `0.005`。不要误传 `0.005`，否则效果会小到几乎看不见。
+- `SPLAT_RADIUS={0.32}`：组件内部会除以 `100`，所以这里的 `0.32` 对应实际半径 `0.0032`。如果想要更接近参考站的大面积扩散，可调回 `0.5`。
 - `SPLAT_FORCE={6000}`：提高鼠标移动时的喷溅力度。
 - `DENSITY_DISSIPATION={1.8}` 与 `VELOCITY_DISSIPATION={1.35}`：让墨色比参考站原始参数更快变淡，避免停留太久。
 - `PRESSURE={0.8}`、`PRESSURE_ITERATIONS={25}`、`CURL={30}`：控制流体压强、迭代和卷曲感。
