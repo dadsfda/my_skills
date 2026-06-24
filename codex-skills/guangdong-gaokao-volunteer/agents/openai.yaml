@@ -1,0 +1,7 @@
+interface:
+  display_name: "广东高考志愿"
+  short_description: "广东省高考志愿填报辅助与风险核验"
+  default_prompt: "Use $guangdong-gaokao-volunteer to analyze a Guangdong Gaokao volunteer application plan."
+
+policy:
+  allow_implicit_invocation: true
