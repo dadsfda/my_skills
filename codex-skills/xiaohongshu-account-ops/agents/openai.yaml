@@ -1,0 +1,4 @@
+interface:
+  display_name: "小红书账号运营"
+  short_description: "规划并执行小红书账号的选题、内容生产、发布互动和数据复盘"
+  default_prompt: "使用 $xiaohongshu-account-ops 为我的小红书账号制定并执行本周运营计划。"
